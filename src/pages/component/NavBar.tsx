@@ -14,12 +14,13 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useTheme } from "@mui/material/styles";
-import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-const NavBar = () => {
+export default function NavBar() {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const router = useRouter();
 
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -34,6 +35,14 @@ const NavBar = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleRedirectToHome = () => {
+    router.push("/");
+  };
+
+  const handleRedirectToOurBlog = () => {
+    router.push(`/our-blog`);
   };
 
   const DrawerList = (
@@ -63,48 +72,64 @@ const NavBar = () => {
         </Stack>
       </Stack>
       <Box sx={{ marginTop: 5 }}>
-        <Link href="/" passHref style={{ textDecoration: "none" }}>
-          <Stack direction="row" sx={{ ml: 3.5, mt: 2 }}>
-            <Stack>
-              <Image
-                src="/icon/home-sidebar.svg"
-                alt="home-icon"
-                width={24}
-                height={24}
-              />
-            </Stack>
-            <Typography
-              sx={{
-                ml: 1.5,
-                fontWeight: 500,
-                color: theme.palette.custom.white,
-              }}
-            >
-              Home
-            </Typography>
+        <Stack
+          direction="row"
+          sx={{
+            ml: 3.5,
+            mt: 2,
+            "&:hover": {
+              cursor: "pointer",
+            },
+          }}
+          onClick={handleRedirectToHome}
+        >
+          <Stack>
+            <Image
+              src="/icon/home-sidebar.svg"
+              alt="home-icon"
+              width={24}
+              height={24}
+            />
           </Stack>
-        </Link>
-        <Link href="our-blog" passHref style={{ textDecoration: "none" }}>
-          <Stack direction="row" sx={{ ml: 3.5, mt: 2 }}>
-            <Stack>
-              <Image
-                src="/icon/edit-sidebar.svg"
-                alt="edit-icon"
-                width={24}
-                height={24}
-              />
-            </Stack>
-            <Typography
-              sx={{
-                ml: 1.5,
-                fontWeight: 500,
-                color: theme.palette.custom.white,
-              }}
-            >
-              Our Blog
-            </Typography>
+          <Typography
+            sx={{
+              ml: 1.5,
+              fontWeight: 500,
+              color: theme.palette.custom.white,
+            }}
+          >
+            Home
+          </Typography>
+        </Stack>
+        <Stack
+          direction="row"
+          sx={{
+            ml: 3.5,
+            mt: 2,
+            "&:hover": {
+              cursor: "pointer",
+            },
+          }}
+          onClick={handleRedirectToOurBlog}
+        >
+          <Stack>
+            <Image
+              src="/icon/edit-sidebar.svg"
+              alt="edit-icon"
+              width={24}
+              height={24}
+            />
           </Stack>
-        </Link>
+          <Typography
+            sx={{
+              ml: 1.5,
+              fontWeight: 500,
+              color: theme.palette.custom.white,
+            }}
+          >
+            Our Blog
+          </Typography>
+        </Stack>
       </Box>
     </Box>
   );
@@ -176,6 +201,4 @@ const NavBar = () => {
       </AppBar>
     </Box>
   );
-};
-
-export default NavBar;
+}

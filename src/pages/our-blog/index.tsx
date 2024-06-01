@@ -1,6 +1,6 @@
 import NavBar from "@/pages/component/NavBar";
 import React, { useState } from "react";
-import SideBar from "./component/SideBar";
+import SideBar from "../component/SideBar";
 import {
   FormControl,
   IconButton,
@@ -14,12 +14,10 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
-import Post from "./component/Post";
-import { useRouter } from "next/router";
+import OurPost from "../component/OurPost";
 
-export default function Home() {
+export default function OurBlogPage() {
   const theme = useTheme();
-  const router = useRouter();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
   const [communityType, setCommunityType] = useState("Community");
   const [value, setValue] = useState("");
@@ -29,10 +27,6 @@ export default function Home() {
   };
   const handleChangeText = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
-  };
-
-  const handleRedirectToDetail = () => {
-    router.push(`/post-detail/${1}`);
   };
 
   const mockData = [1, 3];
@@ -139,10 +133,8 @@ export default function Home() {
               {mockData.map((item, index) => (
                 <Stack
                   key={index}
-                  onClick={handleRedirectToDetail}
                   sx={{
                     color: theme.palette.text.primary,
-                    ":hover": { cursor: "pointer" },
                     backgroundColor: "common.white",
                     mt: "1px",
                     borderRadius:
@@ -155,7 +147,7 @@ export default function Home() {
                         : "0px",
                   }}
                 >
-                  <Post />
+                  <OurPost />
                 </Stack>
               ))}
             </Stack>

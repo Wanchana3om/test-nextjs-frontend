@@ -4,7 +4,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 
-export default function Post() {
+export default function OurPost() {
   const theme = useTheme();
   return (
     <Stack
@@ -14,18 +14,54 @@ export default function Post() {
       }}
     >
       <Stack direction="column">
-        <Stack direction="row" sx={{ alignItems: "center" }}>
-          <AccountCircle sx={{ fontSize: 31 }} />
-          <Typography
-            sx={{
-              ml: "10px",
-              fontSize: "14px",
-              fontWeight: 500,
-              color: theme.palette.custom.base300,
-            }}
-          >
-            username
-          </Typography>
+        <Stack
+          direction="row"
+          sx={{ alignItems: "center", justifyContent: "space-between" }}
+        >
+          <Stack direction="row" sx={{ alignItems: "center" }}>
+            <AccountCircle sx={{ fontSize: 31 }} />
+            <Typography
+              sx={{
+                ml: "10px",
+                fontSize: "14px",
+                fontWeight: 500,
+                color: theme.palette.custom.base300,
+              }}
+            >
+              username
+            </Typography>
+          </Stack>
+          <Stack direction="row">
+            <Stack
+              sx={{
+                mr: "15px",
+                "&:hover": {
+                  cursor: "pointer",
+                },
+              }}
+            >
+              <Image
+                src="/icon/pen.svg"
+                alt="message-icon"
+                width={16}
+                height={16}
+              />
+            </Stack>
+            <Stack
+              sx={{
+                "&:hover": {
+                  cursor: "pointer",
+                },
+              }}
+            >
+              <Image
+                src="/icon/trash.svg"
+                alt="message-icon"
+                width={16}
+                height={16}
+              />
+            </Stack>
+          </Stack>
         </Stack>
         <Box
           sx={{
