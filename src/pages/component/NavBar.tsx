@@ -55,7 +55,7 @@ const NavBar = () => {
         >
           <Image
             src="/icon/arrow-sidebar.svg"
-            alt="logo"
+            alt="arrow-icon"
             width={18}
             height={18}
             onClick={toggleDrawer(false)}
@@ -63,12 +63,12 @@ const NavBar = () => {
         </Stack>
       </Stack>
       <Box sx={{ marginTop: 5 }}>
-        <Link href="/" passHref>
+        <Link href="/" passHref style={{ textDecoration: "none" }}>
           <Stack direction="row" sx={{ ml: 3.5, mt: 2 }}>
             <Stack>
               <Image
                 src="/icon/home-sidebar.svg"
-                alt="logo"
+                alt="home-icon"
                 width={24}
                 height={24}
               />
@@ -84,12 +84,12 @@ const NavBar = () => {
             </Typography>
           </Stack>
         </Link>
-        <Link href="/my-blog" passHref>
+        <Link href="our-blog" passHref style={{ textDecoration: "none" }}>
           <Stack direction="row" sx={{ ml: 3.5, mt: 2 }}>
             <Stack>
               <Image
                 src="/icon/edit-sidebar.svg"
-                alt="logo"
+                alt="edit-icon"
                 width={24}
                 height={24}
               />

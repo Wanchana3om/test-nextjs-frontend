@@ -1,9 +1,11 @@
 import Image from "next/image";
 import { Button, TextField, Stack, Typography } from "@mui/material";
 import { useState } from "react";
+import { useTheme } from "@mui/material/styles";
 
 export default function LoginPage() {
   const [username, setUsername] = useState<string>("");
+  const theme = useTheme();
 
   // const handleClick = async () => {
   //   const username = "root";
@@ -24,7 +26,7 @@ export default function LoginPage() {
     <Stack
       sx={{
         height: "100vh",
-        backgroundColor: "#243831",
+        backgroundColor: theme.palette.primary.main,
       }}
     >
       <Stack
@@ -46,6 +48,7 @@ export default function LoginPage() {
                 fontFamily: "inter, sans-serif",
                 fontSize: 28,
                 fontWeight: 600,
+                color: theme.palette.custom.white,
               }}
             >
               Sign in
@@ -76,8 +79,8 @@ export default function LoginPage() {
                 textTransform: "none",
                 height: 40,
                 borderRadius: "8px",
-                backgroundColor: "#49A569",
-                color: "white",
+                backgroundColor: theme.palette.success.main,
+                color: theme.palette.custom.white,
                 "&:hover": {
                   backgroundColor: "#2C5F44",
                 },
@@ -106,6 +109,7 @@ export default function LoginPage() {
                 fontFamily: "Castoro, serif",
                 fontStyle: "italic",
                 fontSize: 28,
+                color: theme.palette.custom.white,
               }}
             >
               a Board

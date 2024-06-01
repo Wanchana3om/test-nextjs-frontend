@@ -21,7 +21,7 @@ const SideBar = () => {
               <Stack>
                 <Image
                   src="/icon/home-line.svg"
-                  alt="logo"
+                  alt="home-icon"
                   width={24}
                   height={24}
                 />
@@ -37,7 +37,7 @@ const SideBar = () => {
               </Typography>
             </Stack>
           </Link>
-          <Link href="/my-blog" passHref>
+          <Link href="our-blog" passHref>
             <Stack direction="row" sx={{ ml: 3.5, mt: 2 }}>
               <Stack>
                 <Image src="/icon/edit.svg" alt="logo" width={24} height={24} />
