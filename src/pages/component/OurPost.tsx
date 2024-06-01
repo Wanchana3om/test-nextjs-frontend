@@ -3,9 +3,20 @@ import { Box, Chip, Stack, Typography } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-export default function OurPost() {
+interface OurPostProps {
+  handleEdit: () => void;
+}
+
+export default function OurPost({ handleEdit }: OurPostProps) {
   const theme = useTheme();
+  const router = useRouter();
+
+  const handleRedirectToDetail = () => {
+    router.push(`/post-detail/${1}`);
+  };
+
   return (
     <Stack
       sx={{
@@ -33,6 +44,7 @@ export default function OurPost() {
           </Stack>
           <Stack direction="row">
             <Stack
+              onClick={handleEdit}
               sx={{
                 mr: "15px",
                 "&:hover": {
@@ -79,55 +91,61 @@ export default function OurPost() {
             }}
           />
         </Box>
-        <Typography
-          sx={{
-            mt: 0.5,
-            fontWeight: 600,
-            color: theme.palette.text.primary,
-          }}
+        <Stack
+          onClick={handleRedirectToDetail}
+          sx={{ ":hover": { cursor: "pointer" } }}
         >
-          Title The afterlife
-        </Typography>
-        <Typography
-          sx={{
-            fontWeight: 400,
-            fontSize: "12px",
-            color: theme.palette.text.primary,
-            overflow: "hidden",
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            wordBreak: "break-word",
-          }}
-        >
-          The afterlife sitcom The Good Place comes to its culmination, the
-          show’s two protagonists, Eleanor and Chidi, contemplate their future.
-          Having lived thousands upon thousands of lifetimes together, and
-          having experienced virtually everything this life has to offer, they
-          are weary. It is time for it all to end. The show’s solution to this
-          perpetual happiness-cum-weariness is extinction. When you have had
-          enough, when you are utterly sated by love and joy and pleasure, you
-          can walk through a passage to nothingness. And Chidi has had enough.
-        </Typography>
-        <Stack direction="row" sx={{ alignItems: "center", mt: 1.25 }}>
-          <Stack>
-            <Image
-              src="/icon/message.svg"
-              alt="message-icon"
-              width={16}
-              height={16}
-            />
-          </Stack>
           <Typography
             sx={{
-              fontSize: 12,
-              fontWeight: 400,
-              ml: "5px",
-              color: theme.palette.custom.base300,
+              mt: 0.5,
+              fontWeight: 600,
+              color: theme.palette.text.primary,
             }}
           >
-            32 Comments
+            Title The afterlife
           </Typography>
+          <Typography
+            sx={{
+              fontWeight: 400,
+              fontSize: "12px",
+              color: theme.palette.text.primary,
+              overflow: "hidden",
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              wordBreak: "break-word",
+            }}
+          >
+            The afterlife sitcom The Good Place comes to its culmination, the
+            show’s two protagonists, Eleanor and Chidi, contemplate their
+            future. Having lived thousands upon thousands of lifetimes together,
+            and having experienced virtually everything this life has to offer,
+            they are weary. It is time for it all to end. The show’s solution to
+            this perpetual happiness-cum-weariness is extinction. When you have
+            had enough, when you are utterly sated by love and joy and pleasure,
+            you can walk through a passage to nothingness. And Chidi has had
+            enough.
+          </Typography>
+          <Stack direction="row" sx={{ alignItems: "center", mt: 1.25 }}>
+            <Stack>
+              <Image
+                src="/icon/message.svg"
+                alt="message-icon"
+                width={16}
+                height={16}
+              />
+            </Stack>
+            <Typography
+              sx={{
+                fontSize: 12,
+                fontWeight: 400,
+                ml: "5px",
+                color: theme.palette.custom.base300,
+              }}
+            >
+              32 Comments
+            </Typography>
+          </Stack>
         </Stack>
       </Stack>
     </Stack>

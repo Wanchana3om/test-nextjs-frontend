@@ -15,18 +15,34 @@ import {
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import OurPost from "../component/OurPost";
+import DialogPostEdit from "../component/DialogPostEdit";
+import DialogPostCreate from "../component/DialogPostCreate";
+import { useRouter } from "next/navigation";
 
 export default function OurBlogPage() {
   const theme = useTheme();
+  const router = useRouter();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
   const [communityType, setCommunityType] = useState("Community");
   const [value, setValue] = useState("");
+  const [openDialogPostEdit, setOpenDialogPostEdit] = useState<boolean>(false);
+  const [openDialogPostCreate, setOpenDialogPostCreate] =
+    useState<boolean>(false);
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     setCommunityType(event.target.value);
   };
+
   const handleChangeText = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
+  };
+
+  const handleEdit = () => {
+    setOpenDialogPostEdit(!openDialogPostEdit);
+  };
+
+  const handleCreate = () => {
+    setOpenDialogPostCreate(!openDialogPostCreate);
   };
 
   const mockData = [1, 3];
@@ -45,7 +61,6 @@ export default function OurBlogPage() {
         >
           <Stack
             sx={{
-              width: "100%",
               backgroundColor: theme.palette.background.default,
               alignItems: "center",
             }}
@@ -94,7 +109,7 @@ export default function OurBlogPage() {
                 </FormControl>
                 <Select
                   className="dropdown"
-                  value={communityType || ""}
+                  value={communityType || "Community"}
                   onChange={handleChange}
                   MenuProps={{
                     className: "dropdown-xs-full",
@@ -110,11 +125,14 @@ export default function OurBlogPage() {
                     borderRadius: "8px",
                   }}
                 >
-                  <MenuItem value="Community">Community</MenuItem>
+                  <MenuItem value="Community" sx={{ display: "none" }}>
+                    Community
+                  </MenuItem>
                   <MenuItem value="active">active</MenuItem>
                   <MenuItem value="inactive">inactive</MenuItem>
                 </Select>
                 <Stack
+                  onClick={handleCreate}
                   sx={{
                     textAlign: "center",
                     justifyContent: "center",
@@ -147,7 +165,7 @@ export default function OurBlogPage() {
                         : "0px",
                   }}
                 >
-                  <OurPost />
+                  <OurPost handleEdit={handleEdit} />
                 </Stack>
               ))}
             </Stack>
@@ -162,6 +180,8 @@ export default function OurBlogPage() {
           )}
         </Stack>
       </Stack>
+      <DialogPostEdit open={openDialogPostEdit} onClose={handleEdit} />
+      <DialogPostCreate open={openDialogPostCreate} onClose={handleCreate} />
     </Stack>
   );
 }

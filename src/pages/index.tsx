@@ -16,6 +16,7 @@ import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import Post from "./component/Post";
 import { useRouter } from "next/router";
+import DialogPostCreate from "./component/DialogPostCreate";
 
 export default function Home() {
   const theme = useTheme();
@@ -23,6 +24,7 @@ export default function Home() {
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
   const [communityType, setCommunityType] = useState("Community");
   const [value, setValue] = useState("");
+  const [openDialogPost, setOpenDialogPost] = useState<boolean>(false);
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     setCommunityType(event.target.value);
@@ -35,7 +37,11 @@ export default function Home() {
     router.push(`/post-detail/${1}`);
   };
 
-  const mockData = [1, 3];
+  const handleCreate = () => {
+    setOpenDialogPost(!openDialogPost);
+  };
+
+  const mockData = [1, 3, 4, 5];
 
   return (
     <Stack direction="column" spacing={0}>
@@ -51,7 +57,6 @@ export default function Home() {
         >
           <Stack
             sx={{
-              width: "100%",
               backgroundColor: theme.palette.background.default,
               alignItems: "center",
             }}
@@ -70,6 +75,7 @@ export default function Home() {
                     placeholder="Search"
                     value={value}
                     onChange={handleChangeText}
+                    autoComplete="off"
                     sx={{
                       width: "100%",
                       "& .MuiInputBase-root": {
@@ -77,9 +83,6 @@ export default function Home() {
                         borderRadius: "8px",
                         backgroundColor: theme.palette.background.default,
                         border: "1px solid white",
-                        "&:-webkit-autofill": {
-                          WebkitBoxShadow: "0 0 0 1000px transparent inset",
-                        },
                       },
                     }}
                     InputProps={{
@@ -100,11 +103,8 @@ export default function Home() {
                 </FormControl>
                 <Select
                   className="dropdown"
-                  value={communityType || ""}
+                  value={communityType}
                   onChange={handleChange}
-                  MenuProps={{
-                    className: "dropdown-xs-full",
-                  }}
                   sx={{
                     fontSize: "14px",
                     fontWeight: 600,
@@ -116,11 +116,16 @@ export default function Home() {
                     borderRadius: "8px",
                   }}
                 >
-                  <MenuItem value="Community">Community</MenuItem>
-                  <MenuItem value="active">active</MenuItem>
-                  <MenuItem value="inactive">inactive</MenuItem>
+                  ƒ{" "}
+                  <MenuItem value="Community" sx={{ display: "none" }}>
+                    Community
+                  </MenuItem>
+                  <MenuItem value="Food">Food</MenuItem>
+                  <MenuItem value="History">History</MenuItem>
+                  <MenuItem value="Pets">Pets</MenuItem>
                 </Select>
                 <Stack
+                  onClick={handleCreate}
                   sx={{
                     textAlign: "center",
                     justifyContent: "center",
@@ -170,6 +175,8 @@ export default function Home() {
           )}
         </Stack>
       </Stack>
+
+      <DialogPostCreate open={openDialogPost} onClose={handleCreate} />
     </Stack>
   );
 }

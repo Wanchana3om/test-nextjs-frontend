@@ -1,7 +1,5 @@
-// theme.ts
 import { createTheme } from "@mui/material/styles";
 
-// Define your custom colors
 const colors = {
   green: {
     500: "#243831",
@@ -19,8 +17,7 @@ const colors = {
   success: "#49A569",
 };
 
-// Extend the Palette interface to include custom colors
-declare module '@mui/material/styles' {
+declare module "@mui/material/styles" {
   interface Palette {
     custom: {
       base100: string;
@@ -39,7 +36,6 @@ declare module '@mui/material/styles' {
   }
 }
 
-// Create a theme instance
 const theme = createTheme({
   palette: {
     primary: {

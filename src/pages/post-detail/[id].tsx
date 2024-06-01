@@ -1,24 +1,40 @@
 import NavBar from "@/pages/component/NavBar";
 import React, { useState } from "react";
 import SideBar from "../component/SideBar";
-import { Box, Button, Chip, Stack, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  Stack,
+  TextField,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import { AccountCircle } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
+import DialogComment from "../component/DialogComment";
 
-export default function Home() {
+export default function DetailPage() {
   const theme = useTheme();
   const router = useRouter();
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
 
   const [openTextField, setOpenTextField] = useState<boolean>(false);
+  const [openDialogComment, setOpenDialogComment] = useState<boolean>(false);
   const [inputComment, setInputComment] = useState<string>("");
 
   const handleBackForward = () => {
-    router.push("/");
+    router.back();
   };
 
   const handleOpenTextField = () => {
+    if (!isMdUp) {
+      setInputComment("");
+      setOpenDialogComment(!openTextField);
+    }
+
     setInputComment("");
     setOpenTextField(!openTextField);
   };
@@ -194,6 +210,9 @@ export default function Home() {
                             textTransform: "none",
                             mr: 1.5,
                             backgroundColor: "transparent",
+                            "&:hover": {
+                              backgroundColor: "transparent",
+                            },
                           }}
                         >
                           Cancel
@@ -209,6 +228,9 @@ export default function Home() {
                             width: 105,
                             textTransform: "none",
                             backgroundColor: theme.palette.success.main,
+                            "&:hover": {
+                              backgroundColor: theme.palette.success.main,
+                            },
                           }}
                         >
                           Post
@@ -309,6 +331,8 @@ export default function Home() {
           </Stack>
         </Stack>
       </Stack>
+
+      <DialogComment open={openDialogComment} onClose={handleOpenTextField} />
     </Stack>
   );
 }
