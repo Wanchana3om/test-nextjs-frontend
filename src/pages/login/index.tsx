@@ -5,6 +5,21 @@ import { useState } from "react";
 export default function LoginPage() {
   const [username, setUsername] = useState<string>("");
 
+  // const handleClick = async () => {
+  //   const username = "root";
+  //   const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/sign-in", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       username,
+  //     }),
+  //   });
+
+  //   console.log(res);
+  // };
+
   return (
     <Stack
       sx={{

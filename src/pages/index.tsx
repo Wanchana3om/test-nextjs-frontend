@@ -1,34 +1,27 @@
-import { Inter } from "next/font/google";
 import NavBar from "@/pages/component/NavBar";
 import React from "react";
-
-const inter = Inter({ subsets: ["latin"] });
+import SideBar from "./component/SideBar";
+import { Stack } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 export default function Home() {
-  const handleClick = async () => {
-    const username = "root";
-
-    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/sign-in", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-      }),
-    });
-
-    console.log(res);
-  };
+  const theme = useTheme();
 
   return (
-    <>
+    <Stack direction="column" spacing={0}>
       <NavBar />
-      <main
-        className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-      >
-        test
-      </main>
-    </>
+      <Stack direction="row" sx={{}}>
+        <SideBar />
+        <Stack
+          sx={{
+            width: "100%",
+            backgroundColor: theme.palette.background.default,
+            height: "94vh",
+          }}
+        >
+          test
+        </Stack>
+      </Stack>
+    </Stack>
   );
 }
