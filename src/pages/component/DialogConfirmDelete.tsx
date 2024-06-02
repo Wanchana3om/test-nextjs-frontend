@@ -5,13 +5,10 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  IconButton,
   Stack,
-  TextField,
   Typography,
   useTheme,
 } from "@mui/material";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 interface DialogCommentProps {
   open: boolean;

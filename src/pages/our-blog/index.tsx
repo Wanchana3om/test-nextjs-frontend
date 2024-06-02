@@ -17,12 +17,10 @@ import Image from "next/image";
 import OurPost from "../component/OurPost";
 import DialogPostEdit from "../component/DialogPostEdit";
 import DialogPostCreate from "../component/DialogPostCreate";
-import { useRouter } from "next/navigation";
 import DialogConfirmDelete from "../component/DialogConfirmDelete";
 
 export default function OurBlogPage() {
   const theme = useTheme();
-  const router = useRouter();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
   const [communityType, setCommunityType] = useState("Community");
   const [value, setValue] = useState("");

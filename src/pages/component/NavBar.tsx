@@ -16,9 +16,11 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../auth/authContext";
 
 export default function NavBar() {
   const theme = useTheme();
+  const { user, logOut } = useAuth();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
   const router = useRouter();
 
@@ -31,10 +33,6 @@ export default function NavBar() {
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
   };
 
   const handleRedirectToHome = () => {
@@ -158,16 +156,35 @@ export default function NavBar() {
 
           {isMdUp ? (
             <>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
+              <Stack
+                direction="row"
+                sx={{ justifyContent: "center", alignItems: "center" }}
               >
-                <AccountCircle sx={{ fontSize: 40 }} />
-              </IconButton>
+                <Stack>
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    sx={{
+                      fontSize: 16,
+                      fontWeight: 500,
+                      color: theme.palette.custom.white,
+                    }}
+                  >
+                    {user}
+                  </Typography>
+                </Stack>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle sx={{ fontSize: 40 }} />
+                </IconButton>
+              </Stack>
+
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
@@ -181,9 +198,8 @@ export default function NavBar() {
                   horizontal: "right",
                 }}
                 open={Boolean(anchorEl)}
-                onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Log Out</MenuItem>
+                <MenuItem onClick={logOut}>Log Out</MenuItem>
               </Menu>
             </>
           ) : (

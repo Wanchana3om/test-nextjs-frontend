@@ -16,9 +16,18 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 interface DialogCommentProps {
   open: boolean;
   onClose: () => void;
+  onClick: () => void;
+  inputComment: string;
+  setInputComment: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const DialogComment: React.FC<DialogCommentProps> = ({ open, onClose }) => {
+const DialogComment: React.FC<DialogCommentProps> = ({
+  open,
+  onClose,
+  onClick,
+  inputComment,
+  setInputComment,
+}) => {
   const theme = useTheme();
   return (
     <Dialog
@@ -60,7 +69,9 @@ const DialogComment: React.FC<DialogCommentProps> = ({ open, onClose }) => {
           name="textValue"
           fullWidth
           rows={4}
+          value={inputComment}
           multiline
+          onChange={(e) => setInputComment(e.target.value)}
           variant="outlined"
           placeholder="What’s on your mind..."
           sx={{
@@ -88,7 +99,7 @@ const DialogComment: React.FC<DialogCommentProps> = ({ open, onClose }) => {
             Cancel
           </Button>
           <Button
-            onClick={onClose}
+            onClick={onClick}
             sx={{
               fontWeight: "600",
               fontSize: "0.875rem",

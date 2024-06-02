@@ -43,10 +43,13 @@ export default function Home() {
   };
 
   const getAllPost = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+
     const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/blog", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
     });
     const data = await res.json();

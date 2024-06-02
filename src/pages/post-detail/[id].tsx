@@ -37,25 +37,50 @@ export default function DetailPage() {
   const handleOpenTextField = () => {
     if (!isMdUp) {
       setInputComment("");
-      setOpenDialogComment(!openTextField);
+      setOpenDialogComment(!openDialogComment);
     }
 
     setInputComment("");
     setOpenTextField(!openTextField);
   };
 
-  const mockData = [1, 3];
-
   const getPostById = async (id: string) => {
+    const accessToken = localStorage.getItem("accessToken");
+
     const res = await fetch(process.env.NEXT_PUBLIC_API_URL + `/blog/` + id, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
     });
     const data = await res.json();
 
     setPostData(data?.data);
+  };
+
+  const handleAddComment = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("userId");
+    const addComment = await fetch(
+      process.env.NEXT_PUBLIC_API_URL + `/blog/comment`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          userId,
+          postId: postData.id,
+          message: inputComment,
+        }),
+      }
+    );
+
+    if (addComment) {
+      window.location.reload();
+    }
   };
 
   useEffect(() => {
@@ -233,7 +258,7 @@ export default function DetailPage() {
                           Cancel
                         </Button>
                         <Button
-                          onClick={handleOpenTextField}
+                          onClick={() => handleAddComment()}
                           sx={{
                             fontWeight: "600",
                             fontSize: "0.875rem",
@@ -329,7 +354,13 @@ export default function DetailPage() {
         </Stack>
       </Stack>
 
-      <DialogComment open={openDialogComment} onClose={handleOpenTextField} />
+      <DialogComment
+        open={openDialogComment}
+        onClose={handleOpenTextField}
+        onClick={() => handleAddComment()}
+        inputComment={inputComment}
+        setInputComment={setInputComment}
+      />
     </Stack>
   );
 }

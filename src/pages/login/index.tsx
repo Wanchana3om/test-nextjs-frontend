@@ -2,24 +2,15 @@ import Image from "next/image";
 import { Button, TextField, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { useTheme } from "@mui/material/styles";
+import { useAuth } from "../auth/authContext";
 
 export default function LoginPage() {
+  const { signIn } = useAuth();
   const [username, setUsername] = useState<string>("");
   const theme = useTheme();
 
-  const handleClick = async () => {
-    const username = "root";
-    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/sign-in", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-      }),
-    });
-
-    console.log(res);
+  const handleSignIn = () => {
+    signIn(username);
   };
 
   return (
@@ -70,7 +61,7 @@ export default function LoginPage() {
               }}
             />
             <Button
-              onClick={handleClick}
+              onClick={handleSignIn}
               fullWidth
               type="submit"
               variant="contained"
