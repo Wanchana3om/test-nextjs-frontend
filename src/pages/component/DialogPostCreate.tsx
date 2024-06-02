@@ -19,9 +19,32 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 interface DialogCommentProps {
   open: boolean;
   onClose: () => void;
+  onClick: () => void;
+  inputCreatePost: string;
+  communityTypeEmpty: boolean;
+  titleEmpty: boolean;
+  contentEmpty: boolean;
+  inputTitleCreatePost: string;
+  communityTypeCreatePost: string;
+  setInputCreatePost: React.Dispatch<React.SetStateAction<string>>;
+  setInputTitleCreatePost: React.Dispatch<React.SetStateAction<string>>;
+  setCommunityTypeCreatePost: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const DialogPost: React.FC<DialogCommentProps> = ({ open, onClose }) => {
+const DialogPost: React.FC<DialogCommentProps> = ({
+  open,
+  onClose,
+  onClick,
+  inputCreatePost,
+  titleEmpty,
+  contentEmpty,
+  communityTypeEmpty,
+  inputTitleCreatePost,
+  communityTypeCreatePost,
+  setInputCreatePost,
+  setInputTitleCreatePost,
+  setCommunityTypeCreatePost,
+}) => {
   const theme = useTheme();
   return (
     <Dialog
@@ -63,6 +86,8 @@ const DialogPost: React.FC<DialogCommentProps> = ({ open, onClose }) => {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
+            value={communityTypeCreatePost}
+            onChange={(e) => setCommunityTypeCreatePost(e.target.value)}
             sx={{
               width: { xs: "100%", md: 195 },
               fontSize: "14px",
@@ -73,21 +98,38 @@ const DialogPost: React.FC<DialogCommentProps> = ({ open, onClose }) => {
               border: `1px solid ${theme.palette.success.main}`,
               borderRadius: "8px",
             }}
-            defaultValue="Community"
           >
-            <MenuItem value="Community" sx={{ display: "none" }}>
+            <MenuItem value="All" sx={{ display: "none" }}>
               Choose a community
             </MenuItem>
-            <MenuItem value="Food">Food</MenuItem>
             <MenuItem value="History">History</MenuItem>
+            <MenuItem value="Food">Food</MenuItem>
             <MenuItem value="Pets">Pets</MenuItem>
+            <MenuItem value="Health">Health</MenuItem>
+            <MenuItem value="Fashion">Fashion</MenuItem>
+            <MenuItem value="Exercise">Exercise</MenuItem>
+            <MenuItem value="Others">Others</MenuItem>
           </Select>
+          {communityTypeEmpty && (
+            <Typography
+              sx={{
+                fontSize: "12px",
+                fontWeight: 400,
+                color: "red",
+                mt: 0.5,
+              }}
+            >
+              Please select community type.
+            </Typography>
+          )}
         </FormControl>
 
         <TextField
           type="text"
           placeholder="Title"
           autoComplete="off"
+          value={inputTitleCreatePost}
+          onChange={(e) => setInputTitleCreatePost(e.target.value)}
           sx={{
             mt: 1,
             width: "100%",
@@ -98,11 +140,25 @@ const DialogPost: React.FC<DialogCommentProps> = ({ open, onClose }) => {
             },
           }}
         />
+        {titleEmpty && (
+          <Typography
+            sx={{
+              fontSize: "12px",
+              fontWeight: 400,
+              color: "red",
+              mt: 0.5,
+            }}
+          >
+            Title has require.
+          </Typography>
+        )}
         <TextField
           name="textValue"
           fullWidth
           rows={10}
           multiline
+          value={inputCreatePost}
+          onChange={(e) => setInputCreatePost(e.target.value)}
           variant="outlined"
           placeholder="What’s on your mind..."
           sx={{
@@ -112,7 +168,20 @@ const DialogPost: React.FC<DialogCommentProps> = ({ open, onClose }) => {
             },
           }}
         />
+        {contentEmpty && (
+          <Typography
+            sx={{
+              fontSize: "12px",
+              fontWeight: 400,
+              color: "red",
+              mt: 0.5,
+            }}
+          >
+            Content has require.
+          </Typography>
+        )}
       </DialogContent>
+
       <DialogContent>
         <Stack
           spacing={{ xs: 1, md: 0 }}
@@ -140,7 +209,7 @@ const DialogPost: React.FC<DialogCommentProps> = ({ open, onClose }) => {
             Cancel
           </Button>
           <Button
-            onClick={onClose}
+            onClick={onClick}
             sx={{
               fontWeight: "600",
               width: { xs: "100%", md: 105 },

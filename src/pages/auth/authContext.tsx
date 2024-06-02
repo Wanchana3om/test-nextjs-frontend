@@ -1,5 +1,11 @@
 import { useRouter } from "next/router";
-import React, { createContext, useContext, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 const AuthContext = createContext<any>(null);
 
@@ -7,8 +13,8 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const [user, setUser] = useState(null);
-  const [userId, setUserId] = useState(null);
+  const [user, setUser] = useState<string>("");
+  const [userId, setUserId] = useState<any>(null);
 
   const signIn = async (username: string) => {
     const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/user/sign-in", {
@@ -40,6 +46,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     router.push("/login");
   };
 
+  const getProfile = useCallback(() => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      setUser(storedUser || "");
+      const storedUserId = localStorage.getItem("userId");
+      setUserId(storedUserId || "");
+    }
+  }, []);
+
+  useEffect(() => {
+    getProfile();
+  }, [getProfile]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -47,6 +66,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         userId,
         signIn,
         logOut,
+        getProfile,
       }}
     >
       {children}

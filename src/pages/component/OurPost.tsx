@@ -4,18 +4,24 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import PostInterface from "../interfaces/post.interface";
 
 interface OurPostProps {
   handleEdit: () => void;
   handleDelete: () => void;
+  post: PostInterface;
 }
 
-export default function OurPost({ handleEdit ,handleDelete}: OurPostProps) {
+export default function OurPost({
+  handleEdit,
+  handleDelete,
+  post,
+}: OurPostProps) {
   const theme = useTheme();
   const router = useRouter();
 
   const handleRedirectToDetail = () => {
-    router.push(`/post-detail/${1}`);
+    router.push(`/post-detail/${post.id}`);
   };
 
   return (
@@ -40,7 +46,7 @@ export default function OurPost({ handleEdit ,handleDelete}: OurPostProps) {
                 color: theme.palette.custom.base300,
               }}
             >
-              username
+              {post?.user?.username}
             </Typography>
           </Stack>
           <Stack direction="row">
@@ -61,7 +67,7 @@ export default function OurPost({ handleEdit ,handleDelete}: OurPostProps) {
               />
             </Stack>
             <Stack
-            onClick={handleDelete}
+              onClick={handleDelete}
               sx={{
                 "&:hover": {
                   cursor: "pointer",
@@ -83,7 +89,7 @@ export default function OurPost({ handleEdit ,handleDelete}: OurPostProps) {
           }}
         >
           <Chip
-            label="History"
+            label={post.communityType}
             size="small"
             className="customChipWidth"
             sx={{
@@ -104,7 +110,7 @@ export default function OurPost({ handleEdit ,handleDelete}: OurPostProps) {
               color: theme.palette.text.primary,
             }}
           >
-            Title The afterlife
+            {post.title}
           </Typography>
           <Typography
             sx={{
@@ -118,15 +124,7 @@ export default function OurPost({ handleEdit ,handleDelete}: OurPostProps) {
               wordBreak: "break-word",
             }}
           >
-            The afterlife sitcom The Good Place comes to its culmination, the
-            show’s two protagonists, Eleanor and Chidi, contemplate their
-            future. Having lived thousands upon thousands of lifetimes together,
-            and having experienced virtually everything this life has to offer,
-            they are weary. It is time for it all to end. The show’s solution to
-            this perpetual happiness-cum-weariness is extinction. When you have
-            had enough, when you are utterly sated by love and joy and pleasure,
-            you can walk through a passage to nothingness. And Chidi has had
-            enough.
+            {post.content}
           </Typography>
           <Stack direction="row" sx={{ alignItems: "center", mt: 1.25 }}>
             <Stack>
@@ -145,7 +143,7 @@ export default function OurPost({ handleEdit ,handleDelete}: OurPostProps) {
                 color: theme.palette.custom.base300,
               }}
             >
-              32 Comments
+              {post.comments.length} Comments
             </Typography>
           </Stack>
         </Stack>

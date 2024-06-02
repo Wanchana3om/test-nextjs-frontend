@@ -13,11 +13,13 @@ import {
 interface DialogCommentProps {
   open: boolean;
   onClose: () => void;
+  onClick: () => void;
 }
 
 const DialogConfirmDelete: React.FC<DialogCommentProps> = ({
   open,
   onClose,
+  onClick,
 }) => {
   const theme = useTheme();
   return (
@@ -70,7 +72,7 @@ const DialogConfirmDelete: React.FC<DialogCommentProps> = ({
           sx={{ flexDirection: { xs: "column", md: "row-reverse" } }}
         >
           <Button
-            onClick={onClose}
+            onClick={onClick}
             sx={{
               fontWeight: "600",
               fontSize: "0.875rem",

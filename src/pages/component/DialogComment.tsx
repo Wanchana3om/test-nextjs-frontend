@@ -18,6 +18,7 @@ interface DialogCommentProps {
   onClose: () => void;
   onClick: () => void;
   inputComment: string;
+  commentEmpty: boolean;
   setInputComment: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -25,6 +26,7 @@ const DialogComment: React.FC<DialogCommentProps> = ({
   open,
   onClose,
   onClick,
+  commentEmpty,
   inputComment,
   setInputComment,
 }) => {
@@ -80,6 +82,18 @@ const DialogComment: React.FC<DialogCommentProps> = ({
             },
           }}
         />
+        {commentEmpty && (
+          <Typography
+            sx={{
+              fontSize: "12px",
+              fontWeight: 400,
+              color: "red",
+              mt: 0.5,
+            }}
+          >
+            Content has require.
+          </Typography>
+        )}
       </DialogContent>
       <DialogContent>
         <Stack spacing={1} direction="column">

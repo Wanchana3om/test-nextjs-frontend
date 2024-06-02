@@ -24,9 +24,9 @@ export default function DetailPage() {
   const routerQuerry = useRouterNextRouter();
   const { id } = routerQuerry.query;
   const router = useRouterNextNavigation();
-
   const [openTextField, setOpenTextField] = useState<boolean>(false);
   const [openDialogComment, setOpenDialogComment] = useState<boolean>(false);
+  const [commentEmpty, setCommentEmpty] = useState<boolean>(false);
   const [inputComment, setInputComment] = useState<string>("");
   const [postData, setPostData] = useState<any>(null);
 
@@ -36,12 +36,13 @@ export default function DetailPage() {
 
   const handleOpenTextField = () => {
     if (!isMdUp) {
+      setCommentEmpty(false);
       setInputComment("");
       setOpenDialogComment(!openDialogComment);
+    } else {
+      setInputComment("");
+      setOpenTextField(!openTextField);
     }
-
-    setInputComment("");
-    setOpenTextField(!openTextField);
   };
 
   const getPostById = async (id: string) => {
@@ -59,7 +60,16 @@ export default function DetailPage() {
     setPostData(data?.data);
   };
 
+  useEffect(() => {
+    setCommentEmpty(false);
+  }, [inputComment]);
+
   const handleAddComment = async () => {
+    if (!inputComment) {
+      setCommentEmpty(true);
+      return;
+    }
+
     const accessToken = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("userId");
     const addComment = await fetch(
@@ -79,7 +89,10 @@ export default function DetailPage() {
     );
 
     if (addComment) {
-      window.location.reload();
+      getPostById(postData.id);
+      setOpenDialogComment(false);
+      setOpenTextField(false);
+      setCommentEmpty(false);
     }
   };
 
@@ -106,13 +119,13 @@ export default function DetailPage() {
             sx={{
               width: "100%",
               height: "100vh",
-              backgroundColor: "common.white",
               alignItems: "center",
             }}
           >
             <Stack
               sx={{
-                width: "90%",
+                width: "100%",
+                px: { xs: "5%", md: "20%" },
                 backgroundColor: "common.white",
                 mt: 4.5,
               }}
@@ -163,7 +176,7 @@ export default function DetailPage() {
                     }}
                   >
                     <Chip
-                      label="History"
+                      label={postData?.communityType}
                       size="small"
                       className="customChipWidth"
                       sx={{
@@ -234,6 +247,18 @@ export default function DetailPage() {
                         placeholder="What’s on your mind..."
                         aria-describedby="url"
                       />
+                      {commentEmpty && (
+                        <Typography
+                          sx={{
+                            fontSize: "12px",
+                            fontWeight: 400,
+                            color: "red",
+                            mt: 0.5,
+                          }}
+                        >
+                          Content has require.
+                        </Typography>
+                      )}
                       <Stack
                         direction="row"
                         sx={{ mt: 1.25, justifyContent: "end" }}
@@ -357,6 +382,7 @@ export default function DetailPage() {
       <DialogComment
         open={openDialogComment}
         onClose={handleOpenTextField}
+        commentEmpty={commentEmpty}
         onClick={() => handleAddComment()}
         inputComment={inputComment}
         setInputComment={setInputComment}

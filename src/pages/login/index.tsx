@@ -48,6 +48,7 @@ export default function LoginPage() {
             <TextField
               type="text"
               value={username}
+              autoComplete="off"
               placeholder={"Username"}
               aria-describedby="username"
               onChange={(e) => setUsername(e.target.value)}
