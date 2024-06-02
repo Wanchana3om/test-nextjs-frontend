@@ -1,5 +1,5 @@
 import NavBar from "@/pages/component/NavBar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SideBar from "./component/SideBar";
 import {
   FormControl,
@@ -25,6 +25,7 @@ export default function Home() {
   const [communityType, setCommunityType] = useState("Community");
   const [value, setValue] = useState("");
   const [openDialogPost, setOpenDialogPost] = useState<boolean>(false);
+  const [postData, setPostData] = useState<any>([]);
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     setCommunityType(event.target.value);
@@ -41,7 +42,20 @@ export default function Home() {
     setOpenDialogPost(!openDialogPost);
   };
 
-  const mockData = [1, 3, 4, 5];
+  const getAllPost = async () => {
+    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/blog", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    setPostData(data?.data);
+  };
+
+  useEffect(() => {
+    getAllPost();
+  }, []);
 
   return (
     <Stack direction="column" spacing={0}>
@@ -57,6 +71,7 @@ export default function Home() {
         >
           <Stack
             sx={{
+              width: "100%",
               backgroundColor: theme.palette.background.default,
               alignItems: "center",
             }}
@@ -141,7 +156,7 @@ export default function Home() {
                   Create +
                 </Stack>
               </Stack>
-              {mockData.map((item, index) => (
+              {postData?.map((item: any, index: number) => (
                 <Stack
                   key={index}
                   onClick={handleRedirectToDetail}
@@ -151,16 +166,16 @@ export default function Home() {
                     backgroundColor: "common.white",
                     mt: "1px",
                     borderRadius:
-                      mockData.length === 1
+                      postData.length === 1
                         ? "8px"
                         : index === 0
                         ? "8px 8px 0px 0px"
-                        : index === mockData.length - 1
+                        : index === postData.length - 1
                         ? "0px 0px 8px 8px"
                         : "0px",
                   }}
                 >
-                  <Post />
+                  <Post post={item} />
                 </Stack>
               ))}
             </Stack>

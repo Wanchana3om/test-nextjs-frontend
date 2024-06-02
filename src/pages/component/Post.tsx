@@ -3,8 +3,14 @@ import { Box, Chip, Stack, Typography } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
+import PostInterface from "../interfaces/post.interface";
+interface PostProps {
+  post: PostInterface;
+}
 
-export default function Post() {
+const Post: React.FC<PostProps> = ({ post }) => {
+  const { user, comments, content, title, communityType } = post;
+
   const theme = useTheme();
   return (
     <Stack
@@ -24,7 +30,7 @@ export default function Post() {
               color: theme.palette.custom.base300,
             }}
           >
-            username
+            {user?.username}
           </Typography>
         </Stack>
         <Box
@@ -33,7 +39,7 @@ export default function Post() {
           }}
         >
           <Chip
-            label="History"
+            label={communityType}
             size="small"
             className="customChipWidth"
             sx={{
@@ -50,7 +56,7 @@ export default function Post() {
             color: theme.palette.text.primary,
           }}
         >
-          Title The afterlife
+          {title}
         </Typography>
         <Typography
           sx={{
@@ -64,14 +70,7 @@ export default function Post() {
             wordBreak: "break-word",
           }}
         >
-          The afterlife sitcom The Good Place comes to its culmination, the
-          show’s two protagonists, Eleanor and Chidi, contemplate their future.
-          Having lived thousands upon thousands of lifetimes together, and
-          having experienced virtually everything this life has to offer, they
-          are weary. It is time for it all to end. The show’s solution to this
-          perpetual happiness-cum-weariness is extinction. When you have had
-          enough, when you are utterly sated by love and joy and pleasure, you
-          can walk through a passage to nothingness. And Chidi has had enough.
+          {content}
         </Typography>
         <Stack direction="row" sx={{ alignItems: "center", mt: 1.25 }}>
           <Stack>
@@ -90,10 +89,12 @@ export default function Post() {
               color: theme.palette.custom.base300,
             }}
           >
-            32 Comments
+            {comments.length} Comments
           </Typography>
         </Stack>
       </Stack>
     </Stack>
   );
-}
+};
+
+export default Post;

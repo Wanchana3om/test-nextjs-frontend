@@ -15,6 +15,7 @@ const colors = {
   },
   text: "#191919",
   success: "#49A569",
+  error: "#F23536",
 };
 
 declare module "@mui/material/styles" {
@@ -26,6 +27,7 @@ declare module "@mui/material/styles" {
       white: string;
     };
   }
+
   interface PaletteOptions {
     custom?: {
       base100?: string;
@@ -54,6 +56,9 @@ const theme = createTheme({
     },
     success: {
       main: colors.success,
+    },
+    error: {
+      main: colors.error,
     },
     custom: {
       base100: colors.gray[100],

@@ -18,6 +18,7 @@ import OurPost from "../component/OurPost";
 import DialogPostEdit from "../component/DialogPostEdit";
 import DialogPostCreate from "../component/DialogPostCreate";
 import { useRouter } from "next/navigation";
+import DialogConfirmDelete from "../component/DialogConfirmDelete";
 
 export default function OurBlogPage() {
   const theme = useTheme();
@@ -26,6 +27,8 @@ export default function OurBlogPage() {
   const [communityType, setCommunityType] = useState("Community");
   const [value, setValue] = useState("");
   const [openDialogPostEdit, setOpenDialogPostEdit] = useState<boolean>(false);
+  const [openDialogPostDelete, setOpenDialogPostDelete] =
+    useState<boolean>(false);
   const [openDialogPostCreate, setOpenDialogPostCreate] =
     useState<boolean>(false);
 
@@ -45,6 +48,10 @@ export default function OurBlogPage() {
     setOpenDialogPostCreate(!openDialogPostCreate);
   };
 
+  const handleDelete = () => {
+    setOpenDialogPostDelete(!openDialogPostDelete);
+  };
+
   const mockData = [1, 3];
 
   return (
@@ -61,6 +68,7 @@ export default function OurBlogPage() {
         >
           <Stack
             sx={{
+              width: "100%",
               backgroundColor: theme.palette.background.default,
               alignItems: "center",
             }}
@@ -165,7 +173,10 @@ export default function OurBlogPage() {
                         : "0px",
                   }}
                 >
-                  <OurPost handleEdit={handleEdit} />
+                  <OurPost
+                    handleEdit={handleEdit}
+                    handleDelete={handleDelete}
+                  />
                 </Stack>
               ))}
             </Stack>
@@ -182,6 +193,7 @@ export default function OurBlogPage() {
       </Stack>
       <DialogPostEdit open={openDialogPostEdit} onClose={handleEdit} />
       <DialogPostCreate open={openDialogPostCreate} onClose={handleCreate} />
+      <DialogConfirmDelete open={openDialogPostDelete} onClose={handleDelete} />
     </Stack>
   );
 }

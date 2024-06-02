@@ -7,20 +7,20 @@ export default function LoginPage() {
   const [username, setUsername] = useState<string>("");
   const theme = useTheme();
 
-  // const handleClick = async () => {
-  //   const username = "root";
-  //   const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/sign-in", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       username,
-  //     }),
-  //   });
+  const handleClick = async () => {
+    const username = "root";
+    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/sign-in", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+      }),
+    });
 
-  //   console.log(res);
-  // };
+    console.log(res);
+  };
 
   return (
     <Stack
@@ -70,6 +70,7 @@ export default function LoginPage() {
               }}
             />
             <Button
+              onClick={handleClick}
               fullWidth
               type="submit"
               variant="contained"

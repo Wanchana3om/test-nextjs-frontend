@@ -7,9 +7,10 @@ import { useRouter } from "next/navigation";
 
 interface OurPostProps {
   handleEdit: () => void;
+  handleDelete: () => void;
 }
 
-export default function OurPost({ handleEdit }: OurPostProps) {
+export default function OurPost({ handleEdit ,handleDelete}: OurPostProps) {
   const theme = useTheme();
   const router = useRouter();
 
@@ -60,6 +61,7 @@ export default function OurPost({ handleEdit }: OurPostProps) {
               />
             </Stack>
             <Stack
+            onClick={handleDelete}
               sx={{
                 "&:hover": {
                   cursor: "pointer",
