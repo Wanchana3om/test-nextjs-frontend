@@ -34,8 +34,8 @@ export default function Home() {
     setValue(event.target.value);
   };
 
-  const handleRedirectToDetail = () => {
-    router.push(`/post-detail/${1}`);
+  const handleRedirectToDetail = (id: string) => {
+    router.push(`/post-detail/${id}`);
   };
 
   const handleCreate = () => {
@@ -159,7 +159,7 @@ export default function Home() {
               {postData?.map((item: any, index: number) => (
                 <Stack
                   key={index}
-                  onClick={handleRedirectToDetail}
+                  onClick={() => handleRedirectToDetail(item.id)}
                   sx={{
                     color: theme.palette.text.primary,
                     ":hover": { cursor: "pointer" },

@@ -1,5 +1,5 @@
 import NavBar from "@/pages/component/NavBar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SideBar from "../component/SideBar";
 import {
   Box,
@@ -13,17 +13,22 @@ import {
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import { AccountCircle } from "@mui/icons-material";
-import { useRouter } from "next/navigation";
 import DialogComment from "../component/DialogComment";
+import { useRouter as useRouterNextRouter } from "next/router";
+import { useRouter as useRouterNextNavigation } from "next/navigation";
+import timeAgoCal from "../hook/timeAgoCal";
 
 export default function DetailPage() {
   const theme = useTheme();
-  const router = useRouter();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const routerQuerry = useRouterNextRouter();
+  const { id } = routerQuerry.query;
+  const router = useRouterNextNavigation();
 
   const [openTextField, setOpenTextField] = useState<boolean>(false);
   const [openDialogComment, setOpenDialogComment] = useState<boolean>(false);
   const [inputComment, setInputComment] = useState<string>("");
+  const [postData, setPostData] = useState<any>(null);
 
   const handleBackForward = () => {
     router.back();
@@ -40,6 +45,25 @@ export default function DetailPage() {
   };
 
   const mockData = [1, 3];
+
+  const getPostById = async (id: string) => {
+    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + `/blog/` + id, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+
+    setPostData(data?.data);
+  };
+
+  useEffect(() => {
+    if (id) {
+      const postId = Array.isArray(id) ? id[0] : id;
+      getPostById(postId);
+    }
+  }, [id]);
 
   return (
     <Stack direction="column" spacing={0}>
@@ -94,7 +118,7 @@ export default function DetailPage() {
                       color: theme.palette.text.primary,
                     }}
                   >
-                    Username
+                    {postData?.user.username}
                   </Typography>
                   <Typography
                     sx={{
@@ -104,7 +128,7 @@ export default function DetailPage() {
                       color: theme.palette.custom.base300,
                     }}
                   >
-                    5mo. ago
+                    {timeAgoCal(postData?.createdAt)}
                   </Typography>
                 </Stack>
                 <Stack>
@@ -131,7 +155,7 @@ export default function DetailPage() {
                       color: theme.palette.text.primary,
                     }}
                   >
-                    Title The afterlife
+                    {postData?.title}
                   </Typography>
                   <Typography
                     sx={{
@@ -145,16 +169,7 @@ export default function DetailPage() {
                       wordBreak: "break-word",
                     }}
                   >
-                    The afterlife sitcom The Good Place comes to its
-                    culmination, the show’s two protagonists, Eleanor and Chidi,
-                    contemplate their future. Having lived thousands upon
-                    thousands of lifetimes together, and having experienced
-                    virtually everything this life has to offer, they are weary.
-                    It is time for it all to end. The show’s solution to this
-                    perpetual happiness-cum-weariness is extinction. When you
-                    have had enough, when you are utterly sated by love and joy
-                    and pleasure, you can walk through a passage to nothingness.
-                    And Chidi has had enough.
+                    {postData?.content}
                   </Typography>
                   <Stack direction="row" sx={{ alignItems: "center", mt: 3.5 }}>
                     <Stack>
@@ -173,7 +188,7 @@ export default function DetailPage() {
                         color: theme.palette.custom.base300,
                       }}
                     >
-                      32 Comments
+                      {postData?.comments.length || 0} Comments
                     </Typography>
                   </Stack>
 
@@ -257,21 +272,13 @@ export default function DetailPage() {
                   )}
                 </Stack>
 
-                {mockData.map((item, index) => (
+                {postData?.comments?.map((item: any, index: number) => (
                   <Stack
                     key={index}
                     sx={{
                       color: theme.palette.text.primary,
                       backgroundColor: "common.white",
                       mt: "1px",
-                      borderRadius:
-                        mockData.length === 1
-                          ? "8px"
-                          : index === 0
-                          ? "8px 8px 0px 0px"
-                          : index === mockData.length - 1
-                          ? "0px 0px 8px 8px"
-                          : "0px",
                     }}
                   >
                     <Stack direction="row" sx={{ alignItems: "center", mt: 5 }}>
@@ -284,7 +291,7 @@ export default function DetailPage() {
                           color: theme.palette.text.primary,
                         }}
                       >
-                        Username
+                        {item?.user.username}
                       </Typography>
                       <Typography
                         sx={{
@@ -294,7 +301,7 @@ export default function DetailPage() {
                           color: theme.palette.custom.base300,
                         }}
                       >
-                        5mo. ago
+                        {timeAgoCal(item?.createdAt)}
                       </Typography>
                     </Stack>
                     <Stack>
@@ -311,17 +318,7 @@ export default function DetailPage() {
                           wordBreak: "break-word",
                         }}
                       >
-                        The afterlife sitcom The Good Place comes to its
-                        culmination, the show’s two protagonists, Eleanor and
-                        Chidi, contemplate their future. Having lived thousands
-                        upon thousands of lifetimes together, and having
-                        experienced virtually everything this life has to offer,
-                        they are weary. It is time for it all to end. The show’s
-                        solution to this perpetual happiness-cum-weariness is
-                        extinction. When you have had enough, when you are
-                        utterly sated by love and joy and pleasure, you can walk
-                        through a passage to nothingness. And Chidi has had
-                        enough.
+                        {item?.message}
                       </Typography>
                     </Stack>
                   </Stack>
