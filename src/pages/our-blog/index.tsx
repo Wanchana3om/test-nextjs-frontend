@@ -1,6 +1,6 @@
 import NavBar from "@/pages/component/NavBar";
 import React, { useEffect, useState } from "react";
-import SideBar from "./component/SideBar";
+import SideBar from "../component/SideBar";
 import {
   FormControl,
   IconButton,
@@ -14,23 +14,33 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
-import Post from "./component/Post";
-import { useRouter } from "next/router";
-import DialogPostCreate from "./component/DialogPostCreate";
+import OurPost from "../component/OurPost";
+import DialogPostEdit from "../component/DialogPostEdit";
+import DialogPostCreate from "../component/DialogPostCreate";
+import DialogConfirmDelete from "../component/DialogConfirmDelete";
 import { useQuery } from "react-query";
 
-export default function Home() {
+export default function OurBlogPage() {
   const theme = useTheme();
-  const router = useRouter();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
   const [communityType, setCommunityType] = useState<string>("All");
-  const [inputSearch, setInputSearch] = useState<string>("");
-  const [openDialogPost, setOpenDialogPost] = useState<boolean>(false);
+  const [value, setValue] = useState<string>("");
+  const [selectDelete, setSelectDelete] = useState<number>(0);
+  const [selectEdit, setSelectEdit] = useState<number>(0);
+  const [openDialogPostDelete, setOpenDialogPostDelete] =
+    useState<boolean>(false);
+  const [openDialogPostCreate, setOpenDialogPostCreate] =
+    useState<boolean>(false);
   const [inputCreatePost, setInputCreatePost] = useState<string>("");
   const [inputTitleCreatePost, setInputTitleCreatePost] = useState<string>("");
   const [communityTypeCreatePost, setCommunityTypeCreatePost] =
     useState<string>("All");
   const [communityTypeEmpty, setCommunityTypeEmpty] = useState<boolean>(false);
+  const [inputEditPost, setInputEditPost] = useState<string>("");
+  const [inputTitleEditPost, setInputTitleEditPost] = useState<string>("");
+  const [communityTypeEditPost, setCommunityTypeEditPost] =
+    useState<string>("All");
+  const [openDialogPostEdit, setOpenDialogPostEdit] = useState<boolean>(false);
   const [titleEmpty, setTitleEmpty] = useState<boolean>(false);
   const [contentEmpty, setContentEmpty] = useState<boolean>(false);
 
@@ -39,62 +49,64 @@ export default function Home() {
   };
 
   const handleChangeText = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputSearch(event.target.value);
+    setValue(event.target.value);
   };
 
-  const handleRedirectToDetail = (id: string) => {
-    router.push(`/post-detail/${id}`);
+  const handleDialogEdit = (id?: number) => {
+    setSelectEdit(id ?? 0);
+    handleOpenDialogEdit(id ?? 0);
   };
 
-  const handleOpenDialogCreate = () => {
-    setInputCreatePost("");
-    setInputTitleCreatePost("");
-    setCommunityTypeCreatePost("All");
-    setCommunityTypeEmpty(false);
-    setContentEmpty(false);
-    setTitleEmpty(false);
-    setOpenDialogPost(!openDialogPost);
+  const handleCreate = () => {
+    setOpenDialogPostCreate(!openDialogPostCreate);
   };
 
-  useEffect(() => {
-    setTitleEmpty(false);
-    setContentEmpty(false);
-    setCommunityTypeEmpty(false);
-  }, [inputTitleCreatePost, inputCreatePost, communityTypeCreatePost]);
+  const handleDialogDelete = (id?: number) => {
+    setSelectDelete(id ?? 0);
+    setOpenDialogPostDelete(!openDialogPostDelete);
+  };
 
-  const fetchAllPosts = async () => {
+  const handleDelete = async () => {
     const accessToken = localStorage.getItem("accessToken");
 
-    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/blog", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const deletePost = await fetch(
+      process.env.NEXT_PUBLIC_API_URL + "/blog/post",
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          postId: selectDelete,
+        }),
+      }
+    );
+
+    if (deletePost) {
+      refetch();
+      setOpenDialogPostDelete(!openDialogPostDelete);
+    }
+  };
+
+  const fetchOurPosts = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("userId");
+
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_API_URL + "/blog/our-blog/" + userId,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     const data = await res.json();
 
     return data?.data;
   };
-
-  const {
-    data: postData,
-    isLoading,
-    refetch,
-  } = useQuery("allPosts", fetchAllPosts);
-
-  const filteredPosts = postData?.filter((post: any) => {
-    const matchesSearch =
-      post.title.toLowerCase().includes(inputSearch.toLowerCase()) ||
-      post.content.toLowerCase().includes(inputSearch.toLowerCase());
-    const matchesCommunityType =
-      communityType === "All" || post.communityType === communityType;
-    return matchesSearch && matchesCommunityType;
-  });
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   const handleOnPost = async () => {
     if (communityTypeCreatePost === "All") {
@@ -132,14 +144,107 @@ export default function Home() {
     setInputTitleCreatePost("");
     setCommunityTypeCreatePost("All");
     setCommunityTypeEmpty(false);
-    setContentEmpty(false);
+    setOpenDialogPostCreate(false);
     setTitleEmpty(false);
-    setOpenDialogPost(false);
-    setCommunityType("All")
-    setInputSearch("")
+    setContentEmpty(false);
+    setCommunityType("All");
+    setValue("");
 
     refetch();
   };
+
+  const handleOnEdit = async () => {
+    if (!inputTitleEditPost) {
+      setTitleEmpty(true);
+      return;
+    }
+
+    if (!inputEditPost) {
+      setContentEmpty(true);
+      return;
+    }
+
+    const accessToken = localStorage.getItem("accessToken");
+    await fetch(process.env.NEXT_PUBLIC_API_URL + `/blog/post`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        postId: selectEdit,
+        title: inputTitleEditPost,
+        content: inputEditPost,
+        communityType: communityTypeEditPost,
+      }),
+    });
+
+    setInputEditPost("");
+    setInputTitleEditPost("");
+    setCommunityTypeEditPost("All");
+    setOpenDialogPostEdit(false);
+    setTitleEmpty(false);
+    setContentEmpty(false);
+
+    refetch();
+  };
+
+  const handleOpenDialogEdit = async (id?: number) => {
+    setTitleEmpty(false);
+    setContentEmpty(false);
+
+    const accessToken = localStorage.getItem("accessToken");
+
+    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + `/blog/` + id, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const { data } = await res.json();
+
+    setInputEditPost(data?.content);
+    setInputTitleEditPost(data?.title);
+    setCommunityTypeEditPost(data?.communityType);
+
+    setOpenDialogPostEdit(!openDialogPostEdit);
+  };
+
+  useEffect(() => {
+    setTitleEmpty(false);
+    setContentEmpty(false);
+    setCommunityTypeEmpty(false);
+  }, [inputTitleEditPost, inputEditPost]);
+
+  const handleOpenDialogCreate = () => {
+    setTitleEmpty(false);
+    setContentEmpty(false);
+    setCommunityTypeEmpty(false);
+    setInputTitleCreatePost("");
+    setInputCreatePost("");
+    setCommunityTypeCreatePost("All");
+    setOpenDialogPostCreate(!openDialogPostCreate);
+  };
+
+  const {
+    data: postData,
+    isLoading,
+    refetch,
+  } = useQuery("ourPosts", fetchOurPosts);
+
+  const filteredPosts = postData?.filter((post: any) => {
+    const matchesSearch =
+      post.title.toLowerCase().includes(value.toLowerCase()) ||
+      post.content.toLowerCase().includes(value.toLowerCase());
+    const matchesCommunityType =
+      communityType === "All" || post.communityType === communityType;
+    return matchesSearch && matchesCommunityType;
+  });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Stack direction="column" spacing={0}>
@@ -172,9 +277,9 @@ export default function Home() {
                   <TextField
                     type="text"
                     placeholder="Search"
-                    value={inputSearch}
-                    onChange={handleChangeText}
+                    value={value}
                     autoComplete="off"
+                    onChange={handleChangeText}
                     sx={{
                       width: "100%",
                       "& .MuiInputBase-root": {
@@ -182,6 +287,9 @@ export default function Home() {
                         borderRadius: "8px",
                         backgroundColor: theme.palette.background.default,
                         border: "1px solid white",
+                        "&:-webkit-autofill": {
+                          WebkitBoxShadow: "0 0 0 1000px transparent inset",
+                        },
                       },
                     }}
                     InputProps={{
@@ -228,7 +336,7 @@ export default function Home() {
                   <MenuItem value="Others">Others</MenuItem>
                 </Select>
                 <Stack
-                  onClick={handleOpenDialogCreate}
+                  onClick={handleCreate}
                   sx={{
                     textAlign: "center",
                     justifyContent: "center",
@@ -247,10 +355,8 @@ export default function Home() {
               {filteredPosts?.map((item: any, index: number) => (
                 <Stack
                   key={index}
-                  onClick={() => handleRedirectToDetail(item.id)}
                   sx={{
                     color: theme.palette.text.primary,
-                    ":hover": { cursor: "pointer" },
                     backgroundColor: "common.white",
                     mt: "1px",
                     borderRadius:
@@ -263,7 +369,11 @@ export default function Home() {
                         : "0px",
                   }}
                 >
-                  <Post post={item} />
+                  <OurPost
+                    post={item}
+                    handleEdit={() => handleDialogEdit(item.id)}
+                    handleDelete={() => handleDialogDelete(item.id)}
+                  />
                 </Stack>
               ))}
             </Stack>
@@ -278,9 +388,21 @@ export default function Home() {
           )}
         </Stack>
       </Stack>
-
+      <DialogPostEdit
+        open={openDialogPostEdit}
+        onClose={handleDialogEdit}
+        onClick={handleOnEdit}
+        titleEmpty={titleEmpty}
+        contentEmpty={contentEmpty}
+        inputCreatePost={inputEditPost}
+        inputTitleCreatePost={inputTitleEditPost}
+        communityTypeCreatePost={communityTypeEditPost}
+        setInputCreatePost={setInputEditPost}
+        setInputTitleCreatePost={setInputTitleEditPost}
+        setCommunityTypeCreatePost={setCommunityTypeEditPost}
+      />
       <DialogPostCreate
-        open={openDialogPost}
+        open={openDialogPostCreate}
         onClose={handleOpenDialogCreate}
         onClick={handleOnPost}
         titleEmpty={titleEmpty}
@@ -292,6 +414,11 @@ export default function Home() {
         setInputCreatePost={setInputCreatePost}
         setInputTitleCreatePost={setInputTitleCreatePost}
         setCommunityTypeCreatePost={setCommunityTypeCreatePost}
+      />
+      <DialogConfirmDelete
+        open={openDialogPostDelete}
+        onClose={handleDialogDelete}
+        onClick={handleDelete}
       />
     </Stack>
   );
