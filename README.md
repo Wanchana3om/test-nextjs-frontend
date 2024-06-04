@@ -1,40 +1,69 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Test Project (Frontend)
 
-First, run the development server:
+Test Project เป็น Project เกี่ยวกับ Community ที่สามารถสร้าง Blog เพื่อ Post หรือ Comment ซึ่งทุกคนสามารถมาสนทนากันได้ โดยส่วนนี้จะเป็นส่วนของ Frontend โดย [Nextjs](https://nextjs.org/) framework 
+
+##  Prerequisites
+
+ในการพัฒนาครั้งนี้ใช้เป็น 
+- react@18.2.0 
+- react-dom@18.2.0
+- Next.js v13.5.6
+## Installation
+
+ 1. ขั้นตอนเเรกในการติดตั้ง Project ทำการโคลน Project จาก GitHub
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+$ git clone https://github.com/Wanchana3om/test-nextjs-frontend.git
+```
+```bash
+$ cd test-nextjs-frontend
+```
+```bash
+$ npm install
 ```
 
-Open [http://localhost:](http://localhost:3000) with your browser to see the result.
+2. ทำการสร้างไฟล์ .env ขึ้นมาเเล้ว config ตามรูปด้านล่าง
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:8000
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+ - config NEXT_PUBLIC_API_URL เพื่อใช้ในการส่ง request ไปหา api ฝั่ง backend ซึ่งใน backendใช้เป็น port 8000
+ 
+3. ทำการ run project 
+ ```bash
+$ npm run dev
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Application Architecture 
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+ในส่วนของ Architecture
 
-## Learn More
+<img width="400" alt="Screenshot 2567-06-04 at 20 58 17" src="https://github.com/Wanchana3om/test-nextjs-frontend/assets/122344268/c7478a38-4276-4ef1-b70d-9f26f94ba594">
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+จากรูปข้างต้น จะมีการออกแบบ จะแยกเป็น
+- โฟลเดอร์ auth ที่ภายในมี authcotext เป็น context ที่ใช้เป็น fuction กลาง
+คอยเก็บข้อมูลหลังจากได้ token จาก backend มา แล้วยังมี fuction ในการตรวจสอบว่ามี token ใลระบบรึเปล่า หากไม่พบจะทำการ redirect ไปที่หน้า login   
+- โฟลเดอร์ component จัดเก็บไฟล์ component
+- hook จัดเก็บ ไฟล์ hook ต่างๆที่เรียกใช้
+- interfaces จัดเก็บ interface ไฟล์ ใช้ในการระบุ type ที่ถูกต้องของ parameter
+- นอกนั้นจะเป็น path floder ที่เรียกตาม path url
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Libraries/Packages
 
-## Deploy on Vercel
+ในส่วนของ Libraries หรือ Packages ที่ใช้จะมี
+```bash
+ @mui/material
+```
+- element ใน project นี้จะใช้เป็น mui ทั้งหมด
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+  react-query
+```
+- มีการใช้ react-query เพื่อ get ข้อมูลซึ่งจะมี handle isLoading หรือ refetch มาให้ใช้ทำให้สะดวกในการทำการแล้วทำให้ web ดู smooth มากขึ้น
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Credit
+
+ [Wanchana Inmasom](https://github.com/Wanchana3om) 
