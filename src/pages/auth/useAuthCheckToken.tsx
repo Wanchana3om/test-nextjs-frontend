@@ -1,5 +1,3 @@
-// authCheckToken.ts
-
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
